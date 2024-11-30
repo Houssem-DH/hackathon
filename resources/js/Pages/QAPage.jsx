@@ -3,6 +3,7 @@ import { Button } from "@/Components/ui/button";
 import { Textarea } from "@/Components/ui/textarea";
 import Layout from "@/Layouts/Layout";
 import { Avatar } from "@/Components/ui/avatar"; // Import Avatar component
+import { useEffect, useRef } from "react"; // Add hooks for WebSocket
 
 export default function Home({ auth, question, answers }) {
     const { data, setData, post, processing, reset } = useForm({
@@ -10,6 +11,40 @@ export default function Home({ auth, question, answers }) {
         picture: null, // Add picture field to the form data
     });
 
+    // WebSocket Ref
+    const socketRef = useRef(null);
+
+    // Establish WebSocket connection
+    useEffect(() => {
+        const socket = new WebSocket("ws://192.168.1.14:8000/ws/predict"); // Replace with your server URL
+        socket.onopen = () => {
+            console.log("WebSocket connected for AI model");
+        };
+
+        socket.onmessage = (event) => {
+            const response = JSON.parse(event.data);
+            console.log("AI Response:", response);
+            // Handle AI response if needed
+        };
+
+        socket.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        socket.onclose = () => {
+            console.log("WebSocket disconnected");
+        };
+
+        socketRef.current = socket;
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.close();
+            }
+        };
+    }, []);
+
+    // Form submission handler
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -18,9 +53,19 @@ export default function Home({ auth, question, answers }) {
         if (data.picture) {
             formData.append("picture", data.picture);
         }
-        post(route("answer.insert",{id :question.id}), {
+
+        post(route("answer.insert", { id: question.id }), {
             data: formData,
             onSuccess: () => {
+                // Send question and answer to the AI model via WebSocket
+                if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+                    const payload = {
+                        question: question.question,
+                        answer: data.answer,
+                    };
+                    socketRef.current.send(JSON.stringify(payload));
+                }
+
                 alert("Answer submitted successfully!");
                 reset();
             },
@@ -57,17 +102,22 @@ export default function Home({ auth, question, answers }) {
                         {answers.length > 0 ? (
                             <div className="space-y-4">
                                 {answers.map((answer) => (
-                                    <div key={answer.id} className="bg-gray-50 border border-gray-200 p-4 rounded-lg flex space-x-4">
+                                    <div
+                                        key={answer.id}
+                                        className="bg-gray-50 border border-gray-200 p-4 rounded-lg flex space-x-4"
+                                    >
                                         <div className="flex-shrink-0">
                                             <Avatar
-                                                src={answer.user|| "/default-avatar.png"}
+                                                src={answer.user || "/default-avatar.png"}
                                                 alt="User Avatar"
                                                 className="w-12 h-12"
                                             />
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex justify-between items-center mb-2">
-                                                <p className="text-sm font-semibold text-gray-800">{answer.user.email}</p>
+                                                <p className="text-sm font-semibold text-gray-800">
+                                                    {answer.user.email}
+                                                </p>
                                                 <span className="text-xs text-gray-500">Just now</span>
                                             </div>
                                             <p className="text-gray-700">{answer.answer}</p>
@@ -87,7 +137,10 @@ export default function Home({ auth, question, answers }) {
                         )}
 
                         {/* Add Answer Form */}
-                        <form onSubmit={handleSubmit} className="mt-8 bg-white shadow-md rounded-lg p-6">
+                        <form
+                            onSubmit={handleSubmit}
+                            className="mt-8 bg-white shadow-md rounded-lg p-6"
+                        >
                             <h3 className="text-xl font-semibold mb-4">Add Your Answer</h3>
                             <Textarea
                                 placeholder="Write your answer..."
@@ -109,7 +162,8 @@ export default function Home({ auth, question, answers }) {
                                 <Button
                                     type="submit"
                                     className="bg-blue-600 text-white hover:bg-blue-700"
-                                    disabled={processing}>
+                                    disabled={processing}
+                                >
                                     {processing ? "Submitting..." : "Submit Answer"}
                                 </Button>
                             </div>
