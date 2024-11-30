@@ -42,7 +42,7 @@ const Header = ({ user }) => {
                 {/* Logo */}
                 <div className="col-span-3 flex items-center">
                     <Link href="/">
-                        <ApplicationLogo className="h-8 w-auto text-green-700" />
+                        <ApplicationLogo className="h-20 w-auto text-green-700" />
                     </Link>
                 </div>
 
