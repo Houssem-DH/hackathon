@@ -249,7 +249,7 @@ class ClientController extends Controller
 
 
 
-                return Inertia::render('Home/Teams', [
+                return Inertia::render('Questions', [
 
 
             'canLogin' => Route::has('login'),
@@ -307,7 +307,7 @@ class ClientController extends Controller
 
 
 
-            return Inertia::render('Home', [
+            return Inertia::render('MyQuestions', [
 
                 'questions' => $questions,
 
@@ -329,12 +329,12 @@ class ClientController extends Controller
 
         if (Auth::check()) {
 
-            $question = Question::where('id', $id)->first();
-            $answers = Answer::where('question_id', $question->id)->get();
+            $question = Question::with('user')->where('id', $id)->first();
+            $answers = Answer::with('user')->where('question_id', $question->id)->get();
 
 
 
-            return Inertia::render('Home', [
+            return Inertia::render('QAPage', [
 
                 'question' => $question,
                 'answers' => $answers,

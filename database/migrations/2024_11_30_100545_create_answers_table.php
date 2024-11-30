@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('user_id');
             $table->bigInteger('question_id');
-            $table->bigInteger('answer');
+            $table->longtext('answer');
             $table->string('picture')->nullable();
             $table->timestamps();
         });

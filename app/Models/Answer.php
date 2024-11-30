@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Answer extends Model
 {
     use HasFactory;
-    protected $table = 'questions';
+    protected $table = 'answers';
     protected $fillable =
         [
             'user_id',

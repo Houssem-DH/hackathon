@@ -6,8 +6,8 @@ import { User, LogOut } from "lucide-react";
 
 const navbarLinks = [
     { name: "Home", href: "/" },
-    { name: "My Questions", href: "/questions" },
-    { name: "Settings", href: "/settings" },
+    { name: "My Questions", href: "/my-questions" },
+    
 ];
 
 function Header({ user }) {
