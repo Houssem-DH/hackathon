@@ -249,7 +249,7 @@ class ClientController extends Controller
 
 
 
-                return Inertia::render('Home/Teams', [
+                return Inertia::render('Questions', [
 
 
                     'canLogin' => Route::has('login'),

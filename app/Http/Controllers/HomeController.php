@@ -13,7 +13,7 @@ class HomeController extends Controller
 
 
 
-                return Inertia::render('Home/Teams', [
+                return Inertia::render('Home', [
 
 
                     'canLogin' => Route::has('login'),
