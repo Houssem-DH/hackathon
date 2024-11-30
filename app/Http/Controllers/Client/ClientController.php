@@ -148,7 +148,7 @@ class ClientController extends Controller
     }
 
 
-    public function answer_insert(Request $request,$id)
+    public function answer_insert(Request $request, $id)
     {
 
 
@@ -249,12 +249,12 @@ class ClientController extends Controller
 
 
 
-                return Inertia::render('Questions', [
+                return Inertia::render('Home/Teams', [
 
 
-                    'canLogin' => Route::has('login'),
-                    'canRegister' => Route::has('register'),
-                ]);
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
 
 
 
@@ -294,6 +294,60 @@ class ClientController extends Controller
         } else {
             return Redirect::route('Home');
         }
+
+    }
+
+
+    public function questions_user_index()
+    {
+
+        if (Auth::check()) {
+
+            $questions = Question::where('user_id', Auth::user()->id)->get();
+
+
+
+            return Inertia::render('Home', [
+
+                'questions' => $questions,
+
+                'canLogin' => Route::has('login'),
+                'canRegister' => Route::has('register'),
+            ]);
+
+
+        } else {
+            return Redirect::route('Home');
+        }
+
+
+    }
+
+
+    public function question_index_page($id)
+    {
+
+        if (Auth::check()) {
+
+            $question = Question::where('id', $id)->first();
+            $answers = Answer::where('question_id', $question->id)->get();
+
+
+
+            return Inertia::render('Home', [
+
+                'question' => $question,
+                'answers' => $answers,
+
+                'canLogin' => Route::has('login'),
+                'canRegister' => Route::has('register'),
+            ]);
+
+
+        } else {
+            return Redirect::route('Home');
+        }
+
 
     }
 }
