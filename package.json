@@ -27,7 +27,9 @@
         "@radix-ui/react-slot": "^1.1.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "laravel-echo": "^1.17.1",
         "lucide-react": "^0.462.0",
+        "pusher-js": "^8.4.0-rc2",
         "react-feather": "^2.0.10",
         "tailwind-merge": "^2.5.5",
         "tailwindcss-animate": "^1.0.7"
