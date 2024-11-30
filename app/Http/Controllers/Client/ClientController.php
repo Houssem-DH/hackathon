@@ -261,4 +261,39 @@ class ClientController extends Controller
 
 
     }
+
+
+    public function sup_answer($id)
+    {
+        if (Auth::check()) {
+
+            $answer = Answer::find($id);
+
+            if (Auth::user()->id == $answer->user_id) {
+
+                if ($answer->picture) {
+
+                    // Get the full path to the avatar file
+                    $picture = $answer->picture;
+
+                    // Check if the file exists in storage before attempting to delete it
+                    if ($picture) {
+                        // Delete the avatar file
+                        Storage::disk('public')->delete($picture);
+                    }
+                }
+
+                $answer->delete();
+
+                return Redirect::route('/')->with('message', 'Answer Deleted Succesfully');
+
+            } else {
+                return Redirect::route('Home')->with('message', 'Access Denied');
+            }
+
+        } else {
+            return Redirect::route('Home');
+        }
+
+    }
 }
