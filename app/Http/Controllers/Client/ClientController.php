@@ -231,7 +231,7 @@ class ClientController extends Controller
                 $answer->update();
 
 
-                return Redirect::route('/')->with('message', 'Answer Updated Succesfully');
+                return Redirect::route('qa', ['id' => $id])->with('message', 'Answer Updated Succesfully');
 
             } else {
                 return Redirect::route('home')->with('message', 'Access Denied.');
@@ -285,7 +285,7 @@ class ClientController extends Controller
 
                 $answer->delete();
 
-                return Redirect::route('/')->with('message', 'Answer Deleted Succesfully');
+                return Redirect::route('qa', ['id' => $id])->with('message', 'Answer Deleted Succesfully');
 
             } else {
                 return Redirect::route('Home')->with('message', 'Access Denied');
