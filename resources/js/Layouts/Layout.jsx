@@ -13,7 +13,7 @@ const AIWebSocketChatbot = ({ user }) => {
     const toggleChat = () => setIsChatOpen((prev) => !prev);
 
     useEffect(() => {
-        const socket = new WebSocket("ws://192.168.1.14:8000/ws/predict");
+        const socket = new WebSocket("ws://127.0.0.1:3500/ws/predict");
 
         socket.onopen = () => {
             console.log("Connected to WebSocket server");
