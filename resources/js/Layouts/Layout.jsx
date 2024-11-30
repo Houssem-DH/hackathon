@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Children } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import NavBar from "@/Components/NavBar";
 
-const AIWebSocketChatbot = ({ user }) => {
+const AIWebSocketChatbot = ({ user ,children}) => {
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [inputData, setInputData] = useState(""); // State for text input
     const [messages, setMessages] = useState([]); // State for chat messages
@@ -59,6 +59,7 @@ const AIWebSocketChatbot = ({ user }) => {
     return (
         <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0 relative">
             <NavBar user={user} />
+            {children}
             <div className="w-full">{/* Add main content here if necessary */}</div>
 
             <motion.button

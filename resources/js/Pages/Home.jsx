@@ -8,9 +8,7 @@ export default function Home({ auth }) {
             <Head title="Home" />
 
             <Layout user={auth.user}>
-                <div >
-                    <HeroSection />
-                </div>
+            <HeroSection />
             </Layout>
         </>
     );
