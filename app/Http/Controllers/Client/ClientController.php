@@ -178,7 +178,7 @@ class ClientController extends Controller
             $answer->answer = $data['answer'];
 
             $answer->save();
-            return Redirect::route('/')->with('message', 'Answer Added Succesfully');
+            return Redirect::route('qa', ['id' => $id])->with('message', 'Answer Added Succesfully');
 
         } else {
             return Redirect::route('Home');
