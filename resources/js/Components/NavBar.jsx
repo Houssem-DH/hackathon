@@ -11,7 +11,12 @@ import {
     DialogTrigger,
 } from "@/Components/ui/dialog";
 import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu";
 import ApplicationLogo from "./ApplicationLogo";
 import Avatar from "@/Components/Avatar";
 
@@ -28,7 +33,9 @@ const Header = ({ user }) => {
     return (
         <header
             className={`fixed top-0 w-full z-30 transition-all ${
-                scrollActive ? "shadow-md bg-white/90 backdrop-blur-lg" : "bg-white"
+                scrollActive
+                    ? "shadow-md bg-white/90 backdrop-blur-lg"
+                    : "bg-white"
             }`}
         >
             <nav className="max-w-screen-xl mx-auto px-6 sm:px-8 lg:px-16 grid grid-cols-12 items-center py-3">
@@ -100,11 +107,18 @@ const Header = ({ user }) => {
                     {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger>
-                                <Avatar user={user} className="cursor-pointer" />
+                                <Avatar
+                                    user={user}
+                                    className="cursor-pointer"
+                                />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-48">
                                 <DropdownMenuItem>
-                                    <Link href={route("profile.edit", { id: user.id })}>
+                                    <Link
+                                        href={route("profile.edit", {
+                                            id: user.id,
+                                        })}
+                                    >
                                         <span className="flex items-center gap-2 text-gray-600 hover:text-green-700">
                                             <User className="h-4 w-4" />
                                             Profile
@@ -124,7 +138,10 @@ const Header = ({ user }) => {
                     ) : (
                         <>
                             <Link href={route("login")}>
-                                <Button variant="outline" className="text-green-700 border-green-500">
+                                <Button
+                                    variant="outline"
+                                    className="text-green-700 border-green-500"
+                                >
                                     Log In
                                 </Button>
                             </Link>
@@ -146,19 +163,34 @@ const Header = ({ user }) => {
                         </SheetTrigger>
                         <SheetContent className="p-6 bg-gray-50">
                             <nav className="flex flex-col space-y-4">
-                                <Link href="/" className="text-gray-600 hover:text-green-700">
+                                <Link
+                                    href="/"
+                                    className="text-gray-600 hover:text-green-700"
+                                >
                                     Home
                                 </Link>
-                                <Link href="/services" className="text-gray-600 hover:text-green-700">
+                                <Link
+                                    href="/services"
+                                    className="text-gray-600 hover:text-green-700"
+                                >
                                     Services
                                 </Link>
-                                <Link href="/contact" className="text-gray-600 hover:text-green-700">
+                                <Link
+                                    href="/contact"
+                                    className="text-gray-600 hover:text-green-700"
+                                >
                                     Contact
                                 </Link>
-                                <Link href={route("login")} className="text-gray-600 hover:text-green-700">
+                                <Link
+                                    href={route("login")}
+                                    className="text-gray-600 hover:text-green-700"
+                                >
                                     Log In
                                 </Link>
-                                <Link href={route("register")} className="text-green-700 hover:text-green-800">
+                                <Link
+                                    href={route("register")}
+                                    className="text-green-700 hover:text-green-800"
+                                >
                                     Sign Up
                                 </Link>
                             </nav>

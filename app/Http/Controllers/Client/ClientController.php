@@ -46,7 +46,7 @@ class ClientController extends Controller
             $question->question_title = $data['question_title'];
             $question->question = $data['question'];
             $question->save();
-            return Redirect::route('/')->with('message', 'Question Added Succesfully');
+            return Redirect::route('questions')->with('message', 'Question Added Succesfully');
 
         } else {
             return Redirect::route('Home');
