@@ -50,7 +50,6 @@ class QueueController extends Controller
     {
         // Valider les données de la requête
         $validated = $request->validate([
-            'user_id' => 'required|integer',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone_number' => 'required|digits_between:10,15',
@@ -71,7 +70,6 @@ class QueueController extends Controller
 
         // Ajouter le nouveau rendez-vous dans la file d'attente
         $queue = Queue::create([
-            'user_id' => $validated['user_id'],
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'phone_number' => $validated['phone_number'],
