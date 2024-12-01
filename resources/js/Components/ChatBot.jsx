@@ -11,16 +11,12 @@ const ChatBot = () => {
     const [loading, setLoading] = useState(false);
     const [connected, setConnected] = useState(false);
     const socketRef = useRef(null);
+    const messagesEndRef = useRef(null); // Ref for the end of the messages
 
     const toggleChat = () => setIsChatOpen((prev) => !prev);
 
     useEffect(() => {
-        // Retrieve chat messages from localStorage when the component mounts
-        const storedMessages =
-            JSON.parse(localStorage.getItem("chatMessages")) || [];
-        setMessages(storedMessages);
-
-        const socket = new WebSocket("ws://127.0.0.1:3500/ws/predict");
+        const socket = new WebSocket("ws://192.168.1.14:3500/ws/predict");
 
         socket.onopen = () => {
             console.log("Connected to WebSocket server");
@@ -28,18 +24,10 @@ const ChatBot = () => {
         };
 
         socket.onmessage = (event) => {
-            setMessages((prev) => {
-                const updatedMessages = [
-                    ...prev,
-                    { sender: "AI", text: event.data },
-                ];
-                // Save updated messages to localStorage
-                localStorage.setItem(
-                    "chatMessages",
-                    JSON.stringify(updatedMessages)
-                );
-                return updatedMessages;
-            });
+            setMessages((prev) => [
+                ...prev,
+                { sender: "AI", text: event.data },
+            ]);
             setLoading(false);
         };
 
@@ -65,30 +53,28 @@ const ChatBot = () => {
     useEffect(() => {
         // Add a welcome message when the chat opens
         if (isChatOpen) {
-            const welcomeMessage = { sender: "Bot", text: "Hello! How can I assist you today?" };
-            setMessages((prevMessages) => {
-                const updatedMessages = [...prevMessages, welcomeMessage];
-                localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
-                return updatedMessages;
-            });
+            const welcomeMessage = {
+                sender: "Bot",
+                text: "Hello! How can I assist you today?",
+            };
+            setMessages((prevMessages) => [...prevMessages, welcomeMessage]);
         }
     }, [isChatOpen]);
+
+    useEffect(() => {
+        // Scroll to the last message whenever the messages array changes
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
 
     const handleSendMessage = (e) => {
         e.preventDefault();
         if (connected && socketRef.current && inputData.trim()) {
-            setMessages((prev) => {
-                const updatedMessages = [
-                    ...prev,
-                    { sender: "User", text: inputData },
-                ];
-                // Save updated messages to localStorage
-                localStorage.setItem(
-                    "chatMessages",
-                    JSON.stringify(updatedMessages)
-                );
-                return updatedMessages;
-            });
+            setMessages((prev) => [
+                ...prev,
+                { sender: "User", text: inputData },
+            ]);
             setLoading(true);
             socketRef.current.send(inputData);
             setInputData("");
@@ -104,7 +90,7 @@ const ChatBot = () => {
                 onClick={toggleChat}
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
-                className="fixed bottom-6 right-6 p-4 rounded-full   focus:outline-none z-50"
+                className="fixed bottom-6 right-6 p-4 rounded-full focus:outline-none z-50"
             >
                 <img
                     src={BotLogo}
@@ -158,6 +144,8 @@ const ChatBot = () => {
                                     Typing...
                                 </div>
                             )}
+                            {/* Dummy div for scrolling */}
+                            <div ref={messagesEndRef} />
                         </div>
 
                         {/* Footer/Input Area */}

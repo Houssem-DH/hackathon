@@ -8,6 +8,7 @@ use Inertia\Inertia;
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'home'])->name('home');
 Route::get('/Qa/{id}', [\App\Http\Controllers\Client\ClientController::class, 'question_index_page'])->name('qa');
 Route::get('/hub', [\App\Http\Controllers\HomeController::class, 'hub'])->name('hub');
+Route::get('/ticket-request', [\App\Http\Controllers\QueueController::class, 'queue_index'])->name('queue');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

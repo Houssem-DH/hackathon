@@ -1,13 +1,14 @@
 import React from "react";
-import { Button } from "@/Components/ui/button";
 import { MessageCircle, Search } from "lucide-react";
 import { Link } from "@inertiajs/react";
-import HeroImg from '/public/Assets/hero.svg';
 
 const HeroSection = () => {
     return (
         <section className="relative w-full h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-400 text-white overflow-hidden">
-            <div className="absolute inset-0 bg-cover bg-center z-0" style={{ backgroundImage: 'url(/images/community-bg.png)' }}></div>
+            <div
+                className="absolute inset-0 bg-cover bg-center z-0"
+                style={{ backgroundImage: 'url(/images/community-bg.png)' }}
+            ></div>
 
             <div className="max-w-screen-xl mx-auto px-6 sm:px-8 lg:px-16 py-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full z-10">
                 {/* Left Side: Hero Content */}
@@ -37,12 +38,15 @@ const HeroSection = () => {
                     </div>
                 </div>
 
-                {/* Right Side: Hero Image */}
+                {/* Right Side: Hero Video */}
                 <div className="relative flex justify-center lg:justify-end">
-                    <img
-                        src={HeroImg} // Replace with your actual image path
-                        alt="Community Engagement"
+                    <video
+                        src="/Assets/hero.mp4" // Replace with your actual video path
+                        autoPlay
+                        loop
+                        muted
                         className="rounded-lg w-[420px] h-auto object-cover transition-all duration-500 transform hover:scale-105"
+                        playsInline // Allows autoplay on iOS devices
                     />
                 </div>
             </div>

@@ -16,7 +16,7 @@ export default function Home({ auth, question, answers }) {
 
     // Establish WebSocket connection
     useEffect(() => {
-        const socket = new WebSocket("ws://127.0.0.1:3600/ws/predict"); // Replace with your server URL
+        const socket = new WebSocket("ws://192.168.1.14:3600/ws/predict"); // Replace with your server URL
         socket.onopen = () => {
             console.log("WebSocket connected for AI model");
         };
@@ -61,7 +61,7 @@ export default function Home({ auth, question, answers }) {
                     socketRef.current &&
                     socketRef.current.readyState === WebSocket.OPEN
                 ) {
-                    const payload = `${question.question},"${data.answer}"`;
+                    const payload = `${question.question},"${data.answer}",general`;
                     socketRef.current.send(payload);
                 }
 

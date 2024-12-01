@@ -27,7 +27,7 @@ class QueueController extends Controller
             ->orderBy('appointment', 'asc')
             ->get();
 
-        return Inertia::render('MyQuestions', [
+        return Inertia::render('TicketRequest', [
             'availableQueues' => $availableQueues->map(function ($queue) {
                 return [
                     'id' => $queue->id,
