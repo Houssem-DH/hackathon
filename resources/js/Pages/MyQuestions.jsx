@@ -1,38 +1,36 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Button } from "@/Components/ui/button";
+import { Link } from "@inertiajs/react";
 import { Image } from "lucide-react"; // Icon for questions without images
-import Layout from "../Layouts/QuestionLayout";
-import { Link, usePage } from "@inertiajs/react";
+import Layout from "@/Layouts/Layout";
 
 const QuestionsPage = ({ auth, questions }) => {
     return (
         <Layout user={auth.user}>
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-12 py-32">
                 {/* Page Header */}
-                <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
+                <h1 className="text-4xl font-semibold text-center text-gray-900 mb-12">
                     Your Questions
                 </h1>
 
                 {/* Questions Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
                     {questions.length > 0 ? (
                         questions.map((question, index) => (
-                            <Card
+                            <div
                                 key={index}
-                                className="hover:shadow-lg transition-shadow duration-300"
+                                className="bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-in-out"
                             >
                                 {/* Card Header */}
-                                <CardHeader className="flex items-center justify-between">
-                                    <CardTitle className="text-xl font-semibold text-gray-800 truncate">
+                                <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                                    <h3 className="text-xl font-semibold text-gray-800 truncate">
                                         {question.question_title}
-                                    </CardTitle>
-                                </CardHeader>
+                                    </h3>
+                                </div>
 
                                 {/* Card Content */}
-                                <CardContent>
+                                <div className="px-6 py-8">
                                     {/* Question Content */}
-                                    <p className="text-gray-600 mb-4 line-clamp-3">
+                                    <p className="text-gray-700 mb-6 line-clamp-3 text-sm">
                                         {question.question}
                                     </p>
 
@@ -41,31 +39,28 @@ const QuestionsPage = ({ auth, questions }) => {
                                         <img
                                             src={`storage/${question.picture}`}
                                             alt={question.question_title}
-                                            className="w-full h-40 object-cover rounded-lg mb-4"
+                                            className="w-full h-48 object-cover rounded-lg mb-6"
                                         />
                                     ) : (
-                                        <div className="flex items-center justify-center w-full h-40 bg-gray-100 rounded-lg mb-4">
-                                            <Image className="h-16 w-16 text-gray-400" />
+                                        <div className="flex items-center justify-center w-full h-48 bg-gray-100 rounded-lg mb-6">
+                                            <Image className="h-20 w-20 text-gray-400" />
                                         </div>
                                     )}
 
                                     {/* View Button */}
-                                    <Link
-                                        href={route("qa", { id: question.id })}
-                                    >
-                                        <Button
-                                            variant="outline"
-                                            className="w-full"
+                                    <Link href={route("qa", { id: question.id })}>
+                                        <button
+                                            className="w-full py-3 text-sm font-medium text-gray-900 bg-gray-200 hover:bg-gray-300 rounded-lg shadow-md transition-colors duration-300 ease-in-out"
                                         >
                                             View Details
-                                        </Button>
+                                        </button>
                                     </Link>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
                         ))
                     ) : (
                         <div className="col-span-full text-center">
-                            <p className="text-lg text-gray-500">
+                            <p className="text-xl text-gray-500">
                                 No questions found. Start by asking one!
                             </p>
                         </div>

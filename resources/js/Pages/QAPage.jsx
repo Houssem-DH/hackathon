@@ -1,14 +1,14 @@
-import { Head, useForm } from "@inertiajs/react";
-import { Button } from "@/Components/ui/button";
-import { Textarea } from "@/Components/ui/textarea";
-import Layout from "@/Layouts/Layout";
-import { Avatar } from "@/Components/ui/avatar"; // Import Avatar component
 import { useEffect, useRef } from "react"; // Add hooks for WebSocket
+import { formatDistanceToNow } from "date-fns"; // Import from date-fns
+import { Paperclip } from "lucide-react"; // Import Lucide icons
+import { useForm } from "@inertiajs/react";
+import Layout from "@/Layouts/Layout";
+import Avatar from "@/Components/Avatar";
 
 export default function Home({ auth, question, answers }) {
     const { data, setData, post, processing, reset } = useForm({
         answer: "",
-        picture: null, // Add picture field to the form data
+        picture: null,
     });
 
     // WebSocket Ref
@@ -44,12 +44,11 @@ export default function Home({ auth, question, answers }) {
         };
     }, []);
 
-    // Form submission handler
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("answer", data.answer);
-        formData.append("question_id", data.question_id);
+        formData.append("question_id", question.id);
         if (data.picture) {
             formData.append("picture", data.picture);
         }
@@ -66,82 +65,100 @@ export default function Home({ auth, question, answers }) {
                     socketRef.current.send(payload);
                 }
 
-                alert("Answer submitted successfully!");
                 reset();
             },
         });
     };
 
     const handleFileChange = (e) => {
-        setData("picture", e.target.files[0]); // Update the picture field with selected file
+        setData("picture", e.target.files[0]);
     };
 
     return (
-        <>
-            <Head title="Home" />
-            <Layout user={auth.user}>
-                <div className="container mx-auto px-6 py-10">
+        <Layout user={auth.user}>
+            <div className="flex justify-center min-h-screen bg-gray-100 py-32 px-4">
+                <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 space-y-10">
                     {/* Question Section */}
-                    <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
-                        <h1 className="text-3xl font-bold mb-4 text-gray-900">
+                    <div className="bg-gray-50 p-6 rounded-md border border-gray-200">
+                        <div className="flex items-center space-x-4 mb-6">
+                            <Avatar
+                                user={question.user}
+                                alt="User Avatar"
+                                className="w-12 h-12 rounded-full border-2 border-blue-500"
+                            />
+                            <div>
+                                <p className="text-lg font-semibold text-gray-800">
+                                    {question.user.name || question.user.email}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    {formatDistanceToNow(
+                                        new Date(question.created_at),
+                                        {
+                                            addSuffix: true,
+                                        }
+                                    )}
+                                </p>
+                            </div>
+                        </div>
+                        <h1 className="text-2xl font-bold text-gray-900">
                             {question.question_title}
                         </h1>
-                        <p className="text-lg text-gray-700">
+                        <p className="text-gray-700 mt-4">
                             {question.question}
                         </p>
                         {question.picture && (
                             <img
-                                src={question.picture}
+                                src={`/storage/${question.picture}`}
                                 alt="Question Image"
-                                className="mt-4 w-full max-h-64 object-cover rounded-md"
+                                className="mt-6 w-full max-h-64 object-cover rounded-md"
                             />
                         )}
                     </div>
 
                     {/* Answers Section */}
-                    <div className="space-y-8">
-                        <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">
                             Answers
                         </h2>
-
-                        {/* Displaying answers */}
                         {answers.length > 0 ? (
                             <div className="space-y-4">
                                 {answers.map((answer) => (
                                     <div
                                         key={answer.id}
-                                        className="bg-gray-50 border border-gray-200 p-4 rounded-lg flex space-x-4"
+                                        className="bg-white p-4 rounded-md border border-gray-200 shadow-sm"
                                     >
-                                        <div className="flex-shrink-0">
+                                        <div className="flex items-center space-x-4">
                                             <Avatar
-                                                src={
-                                                    answer.user ||
-                                                    "/default-avatar.png"
-                                                }
+                                                user={answer.user}
                                                 alt="User Avatar"
-                                                className="w-12 h-12"
+                                                className="w-10 h-10 rounded-full border-2 border-blue-500"
                                             />
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <p className="text-sm font-semibold text-gray-800">
-                                                    {answer.user.email}
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-800">
+                                                    {answer.user.name}
                                                 </p>
-                                                <span className="text-xs text-gray-500">
-                                                    Just now
-                                                </span>
+                                                <p className="text-xs text-gray-500">
+                                                    {formatDistanceToNow(
+                                                        new Date(
+                                                            answer.created_at
+                                                        ),
+                                                        {
+                                                            addSuffix: true,
+                                                        }
+                                                    )}
+                                                </p>
                                             </div>
-                                            <p className="text-gray-700">
-                                                {answer.answer}
-                                            </p>
-                                            {answer.picture && (
-                                                <img
-                                                    src={answer.picture}
-                                                    alt="Answer Image"
-                                                    className="mt-4 w-64 max-h-48 object-cover rounded-lg"
-                                                />
-                                            )}
                                         </div>
+                                        <p className="text-sm text-gray-700 mt-4">
+                                            {answer.answer}
+                                        </p>
+                                        {answer.picture && (
+                                            <img
+                                                src={`/storage/${answer.picture}`}
+                                                alt="Answer Image"
+                                                className="mt-4 w-full max-h-48 object-cover rounded-md"
+                                            />
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -150,48 +167,61 @@ export default function Home({ auth, question, answers }) {
                                 No answers yet. Be the first to answer!
                             </p>
                         )}
+                    </div>
 
-                        {/* Add Answer Form */}
+                    {/* Add Answer Form */}
+                    {auth.user.id != question.user.id && (
                         <form
                             onSubmit={handleSubmit}
-                            className="mt-8 bg-white shadow-md rounded-lg p-6"
+                            className="bg-gray-50 p-6 rounded-md shadow-md border border-gray-200 space-y-6"
                         >
-                            <h3 className="text-xl font-semibold mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">
                                 Add Your Answer
                             </h3>
-                            <Textarea
+                            <textarea
                                 placeholder="Write your answer..."
                                 value={data.answer}
                                 onChange={(e) =>
                                     setData("answer", e.target.value)
                                 }
-                                className="w-full mb-4"
-                                rows={4}
+                                className="w-full p-4 border-2 border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-gray-800 hover:border-gray-400 transition"
+                                rows={5}
                                 required
                             />
-                            {/* File Upload */}
-                            <input
-                                type="file"
-                                name="picture"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                className="mb-4"
-                            />
-                            <div className="flex justify-between items-center">
-                                <Button
+                            <div className="flex items-center space-x-4">
+                                <label className="relative cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                                    <input
+                                        type="file"
+                                        name="picture"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    />
+                                    <span className="flex items-center space-x-2">
+                                        <Paperclip className="w-5 h-5" />
+                                        <span>Attach File</span>
+                                    </span>
+                                </label>
+                            </div>
+                            <div className="flex justify-end">
+                                <button
                                     type="submit"
-                                    className="bg-blue-600 text-white hover:bg-blue-700"
+                                    className={`bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md shadow-md transition ${
+                                        processing
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                     disabled={processing}
                                 >
                                     {processing
                                         ? "Submitting..."
                                         : "Submit Answer"}
-                                </Button>
+                                </button>
                             </div>
                         </form>
-                    </div>
+                    )}
                 </div>
-            </Layout>
-        </>
+            </div>
+        </Layout>
     );
 }
