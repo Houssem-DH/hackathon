@@ -170,7 +170,7 @@ export default function Home({ auth, question, answers }) {
                     </div>
 
                     {/* Add Answer Form */}
-                    {auth.user.id != question.user.id && (
+                    {auth?.user?.id != question.user.id && (
                         <form
                             onSubmit={handleSubmit}
                             className="bg-gray-50 p-6 rounded-md shadow-md border border-gray-200 space-y-6"

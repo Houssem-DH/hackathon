@@ -327,7 +327,7 @@ class ClientController extends Controller
     public function question_index_page($id)
     {
 
-        if (Auth::check()) {
+        
 
             $question = Question::with('user')->where('id', $id)->first();
             $answers = Answer::with('user')->where('question_id', $question->id)->get();
@@ -344,9 +344,7 @@ class ClientController extends Controller
             ]);
 
 
-        } else {
-            return Redirect::route('Home');
-        }
+        
 
 
     }
