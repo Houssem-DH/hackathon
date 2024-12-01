@@ -56,4 +56,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Answer::class,'id','user_id');
     }
+
+    public function queue()
+    {
+        return $this->hasMany(Queue::class,'id','user_id');
+    }
+    
 }
