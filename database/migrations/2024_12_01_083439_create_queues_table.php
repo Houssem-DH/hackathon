@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('last_name');
             $table->bigInteger('phone_number');
             $table->string('service_type');
-            $table->integer('type_duration'); // Durée en minutes
+            $table->integer('type_duration')->nullable(); // Durée en minutes
             $table->string('postal_office');
-            $table->date('appointment');
+         
+            $table->date('appointment')->nullable();
             $table->string('qr_code')->nullable()->after('appointment');
             $table->timestamps();
         });

@@ -54,7 +54,7 @@ class QueueController extends Controller
             'last_name' => 'required|string|max:255',
             'phone_number' => 'required|digits_between:10,15',
             'service_type' => 'required|string|max:255',
-            'type_duration' => 'required|integer|min:1',
+            
             'postal_office' => 'required|string|max:255',
         ]);
 
@@ -74,13 +74,13 @@ class QueueController extends Controller
             'last_name' => $validated['last_name'],
             'phone_number' => $validated['phone_number'],
             'service_type' => $validated['service_type'],
-            'type_duration' => $validated['type_duration'],
+            
             'postal_office' => $validated['postal_office'],
             'appointment' => $newAppointmentTime,
         ]);
 
         // Rediriger vers une page spécifique avec un message de succès
-        return redirect()->route('queue.index')->with('success', 'Appointment Added .');
+        return redirect()->back()->with('success', 'Appointment Added .');
     }
 
 
