@@ -11,11 +11,12 @@ const ChatBot = () => {
     const [loading, setLoading] = useState(false);
     const [connected, setConnected] = useState(false);
     const socketRef = useRef(null);
-    const messagesEndRef = useRef(null); // Ref for the end of the messages
+    const messagesEndRef = useRef(null);
 
     const toggleChat = () => setIsChatOpen((prev) => !prev);
 
     useEffect(() => {
+        // Changed WebSocket endpoint to /ws
         const socket = new WebSocket("ws://localhost:3500/ws");
 
         socket.onopen = () => {
@@ -24,10 +25,20 @@ const ChatBot = () => {
         };
 
         socket.onmessage = (event) => {
-            setMessages((prev) => [
-                ...prev,
-                { sender: "AI", text: event.data },
-            ]);
+            try {
+                // Parse JSON and extract answer
+                const response = JSON.parse(event.data);
+                setMessages((prev) => [
+                    ...prev,
+                    { sender: "AI", text: response.answer }
+                ]);
+            } catch (error) {
+                console.error("Error parsing response:", error);
+                setMessages((prev) => [
+                    ...prev,
+                    { sender: "AI", text: "Sorry, I couldn't understand that. Please try again." }
+                ]);
+            }
             setLoading(false);
         };
 
@@ -51,7 +62,6 @@ const ChatBot = () => {
     }, []);
 
     useEffect(() => {
-        // Add a welcome message when the chat opens
         if (isChatOpen) {
             const welcomeMessage = {
                 sender: "Bot",
@@ -62,7 +72,6 @@ const ChatBot = () => {
     }, [isChatOpen]);
 
     useEffect(() => {
-        // Scroll to the last message whenever the messages array changes
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
@@ -85,7 +94,6 @@ const ChatBot = () => {
 
     return (
         <>
-            {/* Floating Chat Button */}
             <motion.button
                 onClick={toggleChat}
                 whileHover={{ scale: 1.2 }}
@@ -99,7 +107,6 @@ const ChatBot = () => {
                 />
             </motion.button>
 
-            {/* Chatbox */}
             <AnimatePresence>
                 {isChatOpen && (
                     <motion.div
@@ -109,12 +116,9 @@ const ChatBot = () => {
                         transition={{ duration: 0.3 }}
                         className="fixed bottom-20 right-6 w-[350px] max-h-[500px] bg-white shadow-xl rounded-lg flex flex-col overflow-hidden border border-gray-200 z-50"
                     >
-                        {/* Header */}
                         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 flex justify-between items-center">
                             <h2 className="text-lg font-semibold">
-                                <span className="text-[#FDE047] text-xl">
-                                    Askiny
-                                </span>
+                                <span className="text-[#FDE047] text-xl">Askiny</span>
                                 Bot
                             </h2>
                             <button
@@ -125,7 +129,6 @@ const ChatBot = () => {
                             </button>
                         </div>
 
-                        {/* Chat Body */}
                         <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                             {messages.map((message, index) => (
                                 <div
@@ -136,7 +139,13 @@ const ChatBot = () => {
                                             : "bg-gray-100 mr-auto text-left"
                                     }`}
                                 >
-                                    {message.text}
+                                    {/* Added line break handling */}
+                                    {message.text.split('\n').map((line, i) => (
+                                        <span key={i}>
+                                            {line}
+                                            {i < message.text.split('\n').length - 1 && <br />}
+                                        </span>
+                                    ))}
                                 </div>
                             ))}
                             {loading && (
@@ -144,11 +153,9 @@ const ChatBot = () => {
                                     Typing...
                                 </div>
                             )}
-                            {/* Dummy div for scrolling */}
                             <div ref={messagesEndRef} />
                         </div>
 
-                        {/* Footer/Input Area */}
                         <form
                             onSubmit={handleSendMessage}
                             className="flex items-center p-3 border-t bg-gray-50"
