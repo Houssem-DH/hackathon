@@ -16,7 +16,7 @@ const ChatBot = () => {
     const toggleChat = () => setIsChatOpen((prev) => !prev);
 
     useEffect(() => {
-        const socket = new WebSocket("ws://localhost:3500/ws/predict");
+        const socket = new WebSocket("ws://localhost:3500/ws");
 
         socket.onopen = () => {
             console.log("Connected to WebSocket server");
